@@ -15,11 +15,13 @@ The configuration file can be found at the following path: `addons\counterstrike
     "*": {
       "Enabled": true,
       "OnHeadShotOnly": true,
+      "OnKillOnly": true,
       "Multiplier": 0.5
     },
     "@css/vip": {
       "Enabled": true,
       "OnHeadShotOnly": true,
+      "OnKillOnly": true,
       "Multiplier": 0.75
     }
   },
