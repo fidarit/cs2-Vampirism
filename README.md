@@ -13,15 +13,14 @@ The configuration file can be found at the following path: `addons\counterstrike
 {
   "Permissions": {
     "*": {
-      "Weapons": {
-        "*": 1,
-        "hegrenade": 1.1
-      }
+      "Enabled": true,
+      "OnHeadShotOnly": true,
+      "Multiplier": 0.5
     },
     "@css/vip": {
-      "Weapons": {
-        "*": 1.25
-      }
+      "Enabled": true,
+      "OnHeadShotOnly": true,
+      "Multiplier": 0.75
     }
   },
   "ConfigVersion": 1
