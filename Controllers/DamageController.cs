@@ -1,8 +1,9 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
-using VampirismCS2.Models;
 using System;
 using System.Linq;
+using VampirismCS2.Models;
 
 namespace VampirismCS2.Controllers
 {
@@ -11,40 +12,67 @@ namespace VampirismCS2.Controllers
         public DamageController(Plugin plugin) : base(plugin)
         {
             plugin.RegisterEventHandler<EventPlayerHurt>(EventPlayerHurtHandler, HookMode.Pre);
+            plugin.RegisterEventHandler<EventPlayerDeath>(EventPlayerDeathHandler, HookMode.Post);
         }
 
-        private HookResult EventPlayerHurtHandler(EventPlayerHurt eventInfo, GameEventInfo gameEventInfo)
+        private HookResult EventPlayerDeathHandler(EventPlayerDeath eventInfo, GameEventInfo gameEventInfo)
         {
             var attacker = eventInfo.Attacker;
-            var victim = eventInfo.Userid?.PlayerPawn?.Value;
+            var victim = eventInfo.Userid;
 
-            if (eventInfo.DmgHealth <= 0)
-                return HookResult.Continue;
-
-            if (attacker == null || !attacker.IsValid)
-                return HookResult.Continue;
-
-            if (victim == null || !victim.IsValid)
-                return HookResult.Continue;
-
-            var multiplier = TryGetMultiplier(attacker, eventInfo);
+            var multiplier = TryGetMultiplier(attacker, victim, (HitGroup_t)eventInfo.Hitgroup);
             if (multiplier == null)
                 return HookResult.Continue;
 
             var heal = (int)(eventInfo.DmgHealth * multiplier);
 
-            attacker.Health = Math.Clamp(attacker.Health + heal, 0, attacker.MaxHealth);
+            Heal(attacker, heal);
+
+            return HookResult.Continue;
+
+        }
+
+        private HookResult EventPlayerHurtHandler(EventPlayerHurt eventInfo, GameEventInfo gameEventInfo)
+        {
+            var attacker = eventInfo.Attacker;
+            var victim = eventInfo.Userid;
+
+            var multiplier = TryGetMultiplier(attacker, victim, (HitGroup_t)eventInfo.Hitgroup);
+            if (multiplier == null)
+                return HookResult.Continue;
+
+            var heal = (int)(eventInfo.DmgHealth * multiplier);
+
+            Heal(attacker, heal);
 
             return HookResult.Continue;
         }
 
-        private float? TryGetMultiplier(CCSPlayerController playerController, EventPlayerHurt eventInfo)
+        private void Heal(CCSPlayerController player, int heal)
         {
-            var permission = TryGetPermissionConfig(playerController);
+            var playerPawn = player.PlayerPawn.Value;
+
+            playerPawn.Health = Math.Clamp(playerPawn.Health + heal, 0, playerPawn.MaxHealth);
+
+            Utilities.SetStateChanged(playerPawn, "CBaseEntity", "m_iHealth");
+        }
+
+        private float? TryGetMultiplier(CCSPlayerController attacker, CCSPlayerController victim, HitGroup_t hitGroup)
+        {
+            if (attacker == null || !attacker.IsValid)
+                return null;
+
+            if (victim == null || !victim.IsValid)
+                return null;
+
+            var permission = TryGetPermissionConfig(attacker);
             if (permission == null || !permission.Enabled)
                 return null;
 
-            if (permission.OnHeadShotOnly && eventInfo.Hitgroup != (int)HitGroup_t.HITGROUP_HEAD)
+            if (permission.OnHeadShotOnly && hitGroup != HitGroup_t.HITGROUP_HEAD)
+                return null;
+
+            if (permission.OnKillOnly == (victim.PlayerPawn.Value.LifeState == (byte)LifeState_t.LIFE_ALIVE))
                 return null;
 
             return permission.Multiplier;
