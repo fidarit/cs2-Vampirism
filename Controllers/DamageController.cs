@@ -4,6 +4,7 @@ using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Admin;
 using System;
 using System.Linq;
+using VampirismCS2.Extensions;
 using VampirismCS2.Models;
 
 namespace VampirismCS2.Controllers
@@ -97,7 +98,7 @@ namespace VampirismCS2.Controllers
 
         private static bool CheckPlayerIsLeader(CCSPlayerController playerController)
         {
-            var ggApi = GungameApi.Get();
+            var ggApi = GungameApi.GetPluginOrNull();
             if (ggApi == null)
             {
                 Server.PrintToConsole("GunGame mod was not found");
