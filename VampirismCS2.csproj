@@ -21,4 +21,20 @@
     <ProjectReference Include="GunGameAPI\GunGameAPI.csproj" />
   </ItemGroup>
 
+  <Target Name="CustomTarget" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release' ">
+    <PropertyGroup>
+      <VersionPath>bin\VampirismCS2 (v$(Version))\</VersionPath>
+      <SharedDir>$(VersionPath)shared\GunGameAPI\</SharedDir>
+      <PluginsDir>$(VersionPath)plugins\VampirismCS2\</PluginsDir>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(SharedDir)" />
+    <MakeDir Directories="$(PluginsDir)" />
+
+    <Copy SourceFiles="$(OutDir)GunGameAPI.dll" DestinationFolder="$(SharedDir)" />
+    <Copy SourceFiles="$(OutDir)GunGameAPI.dll" DestinationFolder="$(PluginsDir)" />
+    <Copy SourceFiles="$(OutDir)VampirismCS2.dll" DestinationFolder="$(PluginsDir)" />
+    <Copy SourceFiles="$(OutDir)VampirismCS2.deps.json" DestinationFolder="$(PluginsDir)" />
+  </Target>
+
 </Project>

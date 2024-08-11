@@ -43,7 +43,7 @@ Integration with [GunGame](https://github.com/ssypchenko/cs2-gungame):
 - [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)
 
 ## Installation
-1. Download the zip file from the [latest release](../../releases), and extract the contents into your `counterstrikesharp/plugins` directory.
+1. Download the zip file from the [latest release](../../releases), and extract the contents into your `addons/counterstrikesharp` directory.
 
 ## Acknowledgments
 If you appreciate the project then please take the time to star the repository 🙏
