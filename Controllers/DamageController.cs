@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Admin;
 using System;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace VampirismCS2.Controllers
 {
     internal class DamageController : BaseController
     {
+        public static PluginCapability<IAPI> GungameApi { get; } = new("gungame:api");
+
         public DamageController(Plugin plugin) : base(plugin)
         {
             plugin.RegisterEventHandler<EventPlayerHurt>(EventPlayerHurtHandler, HookMode.Pre);
@@ -48,7 +51,7 @@ namespace VampirismCS2.Controllers
             return HookResult.Continue;
         }
 
-        private void Heal(CCSPlayerController player, int heal)
+        private static void Heal(CCSPlayerController player, int heal)
         {
             var playerPawn = player.PlayerPawn.Value;
 
@@ -75,6 +78,9 @@ namespace VampirismCS2.Controllers
             if (permission.OnKillOnly == (victim.PlayerPawn.Value.LifeState == (byte)LifeState_t.LIFE_ALIVE))
                 return null;
 
+            if (permission.GG_IgnoreLeader && CheckPlayerIsLeader(attacker))
+                return null;
+
             return permission.Multiplier;
         }
 
@@ -87,6 +93,18 @@ namespace VampirismCS2.Controllers
                 .Select(t => t.Value)
                 .Append(any)
                 .FirstOrDefault();
+        }
+
+        private static bool CheckPlayerIsLeader(CCSPlayerController playerController)
+        {
+            var ggApi = GungameApi.Get();
+            if (ggApi == null)
+            {
+                Server.PrintToConsole("GunGame mod was not found");
+                return false;
+            }
+
+            return ggApi.GetPlayerLevel(playerController.Slot) == ggApi.GetMaxCurrentLevel();
         }
     }
 }

@@ -8,7 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GunGameAPI\**" />
+    <EmbeddedResource Remove="GunGameAPI\**" />
+    <None Remove="GunGameAPI\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CounterStrikeSharp.API" Version="1.0.255" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="GunGameAPI\GunGameAPI.csproj" />
   </ItemGroup>
 
 </Project>

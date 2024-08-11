@@ -16,18 +16,27 @@ The configuration file can be found at the following path: `addons\counterstrike
       "Enabled": true,
       "OnHeadShotOnly": true,
       "OnKillOnly": true,
-      "Multiplier": 0.5
+      "Multiplier": 0.5,
+
+      "GG_IgnoreLeader": true
     },
     "@css/vip": {
       "Enabled": true,
       "OnHeadShotOnly": true,
       "OnKillOnly": true,
-      "Multiplier": 0.75
+      "Multiplier": 0.75,
+
+      "GG_IgnoreLeader": false
     }
   },
   "ConfigVersion": 1
 }
 ```
+
+Integration with [GunGame](https://github.com/ssypchenko/cs2-gungame):
+
+- `GG_IgnoreLeader` parameter allow you to enable ignoring of GunGame leader
+
 
 ## Requirements
 - [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master)
