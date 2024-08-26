@@ -8,8 +8,8 @@ namespace VampirismCS2.Extensions
         {
             return Assembly
                 .GetExecutingAssembly()
-                .GetCustomAttribute<AssemblyVersionAttribute>()
-                .Version;
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;
         }
 
         public static string GetAuthor()
