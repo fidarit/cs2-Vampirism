@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.260" />
+    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.340" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +32,6 @@
     <MakeDir Directories="$(PluginsDir)" />
 
     <Copy SourceFiles="$(OutDir)GunGameAPI.dll" DestinationFolder="$(SharedDir)" />
-    <Copy SourceFiles="$(OutDir)GunGameAPI.dll" DestinationFolder="$(PluginsDir)" />
     <Copy SourceFiles="$(OutDir)VampirismCS2.dll" DestinationFolder="$(PluginsDir)" />
     <Copy SourceFiles="$(OutDir)VampirismCS2.deps.json" DestinationFolder="$(PluginsDir)" />
   </Target>
